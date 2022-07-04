@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>hexa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <div class="logo">
+    <img src="img/logo.png" alt="">
+  </div>
+
+  <h1>Društvena mreža namenjena etičkim H4K3R1M4</h1>
+
+  <div class="main-wrapper">
+    <form id="loginForm">
+      <h2>Login</h2>
+
+      <div>
+        <label>Email</label>
+        <input type="email" name="email" id="login_email" placeholder="niko.nikolic@mail.com">
+      </div>
+
+      <div>
+        <label>Lozinka</label>
+        <input type="password" name="lozinka" id="login_lozinka" placeholder="******">
+      </div>
+
+      <div>
+        <button>Uloguj se</button>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="no-acc-register">
+    <p>Nemaš nalog?</p>
+    <button id="registracija">Registruj se!</button>
+  </div>
+
+  <div class="custom-modal">
+    <button id="closeModal">x</button>
+
+    <form id="registrationForm">
+      <h2>Registracija korisnika</h2>
+
+      <div>
+        <label for="korisnicko_ime">Korisničko ime: *</label>
+        <input id="korisnicko_ime" type="text" name="korisnicko_ime" placeholder="niko.nikolic" onkeypress="CheckSpace(event)"/>
+      </div>
+
+      <div>
+        <label for="email">Email adresa: *</label>
+        <input id="email" type="text" name="register_email" placeholder="niko.nikolic@mail.com">
+      </div>
+
+      <div>
+        <label for="lozinka">Lozinka: *</label>
+        <input id="lozinka" type="text" name="register_lozinka" placeholder="*******">
+      </div>
+
+      <div>
+        <label for="ponovi_lozinku">Ponovi lozinku: *</label>
+        <input id="ponovi_lozinku" type="text" name="ponovi_lozinku" placeholder="*******">
+      </div>
+
+      <div>
+        <button>Registruj se</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="js/Validator.js"></script>
+  <script src="js/Session.js"></script>
+  <script src="js/User.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>
