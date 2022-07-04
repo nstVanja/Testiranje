@@ -37,64 +37,14 @@ document.querySelector('#closeModal').addEventListener('click', () => {
   document.querySelector('.custom-modal').style.display = 'none';
 });
 
-
-/*  ***************      */
-let config = {
-  'korisnicko_ime': {
-    required: true,
-    minlength: 5,
-    maxlength: 50
-  },
-
-  'register_email': {
-    required: true,
-    email: true,
-    minlength: 5,
-    maxlength: 50
-  },
-
-  'register_lozinka': {
-    required: true,
-    minlength: 7,
-    maxlength: 25
-    //matching: 'ponovi_lozinku'
-  },
-
-  'ponovi_lozinku': {
-    required: true,
-    //minlength: 7,
-    //maxlength: 25,
-    matching: 'register_lozinka'
-  }
-};
-
-let validator = new Validator(config, '#editForm');
-
-console.log(validator.validationPassed());
-
 document.querySelector('#editForm').addEventListener('submit', e => {
   e.preventDefault();
 
+  let user = new User();
 
-});
-
-/*    ************     */
-
-document.querySelector('#editForm').addEventListener('submit', e => {
-  e.preventDefault();
-
-  if (validator.validationPassed()) {
-
-    let user = new User();
-
-    user.username = document.querySelector('#korisnicko_ime').value;
-    user.email = document.querySelector('#edit_email').value;
-    user.password = document.querySelector('#edit_password').value;
-    user.edit();
-  } else {
-    alert('Polja nisu dobro popunjena');
-  }
-
+  user.username = document.querySelector('#korisnicko_ime').value;
+  user.email = document.querySelector('#edit_email').value;
+  user.edit();
 });
 
 document.querySelector('#btnDelete').addEventListener('click', e => {
@@ -148,7 +98,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
                                                                     <div class="post-comments">
                                                                         <form>
                                                                             <input placeholder="Napiši komentar..." type="text">
-                                                                            <button onclick="commentPostSubmit(event)">OK</button>
+                                                                            <button onclick="commentPostSubmit(event)">Comment</button>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -210,7 +160,7 @@ async function getAllPosts() {
                                                                   <div class="post-comments">
                                                                       <form>
                                                                           <input placeholder="Napiši komentar..." type="text">
-                                                                          <button onclick="commentPostSubmit(event)">OK</button>
+                                                                          <button onclick="commentPostSubmit(event)">Comment</button>
                                                                       </form>
                                                                       ${comments_html}
                                                                   </div>
