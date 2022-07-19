@@ -62,22 +62,22 @@
 
       <div>
         <label for="korisnicko_ime">Korisničko ime: *</label>
-        <input id="korisnicko_ime" type="text" name="korisnicko_ime" placeholder="niko.nikolic" onkeypress="CheckSpace(event)"/>
+        <input id="korisnicko_ime" type="text" name="korisnicko_ime" placeholder="niko.nikolic"/>
       </div>
 
       <div>
         <label for="edit_email">Email adresa: *</label>
-        <input id="edit_email" type="text" name="register_email" placeholder="niko.nikolic@mail.com">
+        <input id="edit_email" type="text" name="edit_email" placeholder="niko.nikolic@mail.com">
       </div>
 
       <div>
-        <label for="lozinka">Lozinka: *</label>
-        <input id="lozinka" type="text" name="register_lozinka" placeholder="*******">
+        <label for="edit_lozinka">Lozinka: *</label>
+        <input id="edit_lozinka" type="text" name="edit_lozinka" placeholder="*******">
       </div>
 
       <div>
-        <label for="ponovi_lozinku">Ponovi lozinku: *</label>
-        <input id="ponovi_lozinku" type="text" name="ponovi_lozinku" placeholder="*******">
+        <label for="edit_ponovi_lozinku">Ponovi lozinku: *</label>
+        <input id="edit_ponovi_lozinku" type="text" name="edit_ponovi_lozinku" placeholder="*******">
       </div>
 
       <div>
@@ -90,6 +90,7 @@
     <button id="btnDelete">OBRIŠI PROFIL</button>
   </div>
 
+  <script src="js/Validator.js"></script>
   <script src="js/Session.js"></script>
   <script src="js/User.js"></script>
   <script src="js/Comment.js"></script>
