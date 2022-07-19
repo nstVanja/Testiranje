@@ -1,4 +1,5 @@
 class Validator {
+  api_url = 'https://62a6efa397b6156bff8300bc.mockapi.io';
   constructor(config, formID) {
     this.elementsConfig = config;
     this.formID = formID;
@@ -22,6 +23,8 @@ class Validator {
 
       el.addEventListener('input', this.validate.bind(this));
     }
+    console.log('inputSelector');
+    console.log(inputSelector);
   }
 
   validate(e) {
@@ -39,20 +42,70 @@ class Validator {
       }
     }
 
+
+
+    //   ** Provera username - duplikat i space **    //
+    if (fieldName === 'korisnicko_ime') {
+
+      let valid_user = document.querySelector('#korisnicko_ime').value;
+
+      const podaci = fetch(this.api_url + '/users')
+        .then((response) => response.json())
+        .then((data) => {
+          return data;
+        });
+
+      const checkDuplicate = async () => {
+        const db_user = await podaci;
+
+        let uzetiId = 0;
+        let ca = document.cookie.split('=');
+
+        if (ca == '') {
+          uzetiId = 0;
+          console.log('uzetiId ' + uzetiId);
+        } else {
+          uzetiId = ca[1];
+          console.log('uzetiId ' + uzetiId);
+        }
+
+        for (let i = 0; i < db_user.length; i++) {
+          console.log('valid_user ' + valid_user);
+
+          if (db_user[i].username === valid_user && uzetiId === 0) {
+            this.errors[fieldName].push('Korisničko ime već postoji');
+            alert('Korisničko ime već postoji');
+            break;
+          }
+          if (db_user[i].username === valid_user && uzetiId !== db_user[i].user_id) {
+            this.errors[fieldName].push('Korisničko ime već postoji');
+            alert('Korisničko ime već postoji');
+            break;
+          }
+        }
+      };
+      checkDuplicate();
+
+    }
+    //   ******************    //
+
+    if (fieldName === 'korisnicko_ime') {
+
+      if (!this.validateUserName(fieldValue)) {
+        this.errors[fieldName].push('Korisničko ime ne sme da sadrži space karakter');
+      } else {
+        console.log('Ispravno korisničko ime');
+      }
+    }
+
     if (elFields[fieldName].email) {
       if (!this.validateEmail(fieldValue)) {
         this.errors[fieldName].push('Neispravna email adresa');
       }
     }
 
-    if (elFields[fieldName].username) {
-      if (!this.validateUserName(fieldValue)) {
-        this.errors[fieldName].push('Neispravno korisničko ime');
-      }
-    }
-
     if (fieldValue.length < elFields[fieldName].minlength || fieldValue.length > elFields[fieldName].maxlength) {
-      this.errors[fieldName].push(`Polje mora imati minimalno ${elFields[fieldName].minlength} i maksimalno ${elFields[fieldName].maxlength} karaktera`);
+      this.errors[fieldName].push(`Polje mora imati minimalno ${elFields[fieldName].minlength}, a maksimalno ${elFields[fieldName].maxlength} karaktera`);
     }
 
     if (elFields[fieldName].matching) {
@@ -100,20 +153,39 @@ class Validator {
   }
 
   validateEmail(email) {
-    const email_string = `[A-Z0-9._%#+-]+@(?:[A-Z0-9.-]+\.[A-Z]{2,4}|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\])`;
-    if (email_string.test(email)) {
+
+    const valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (valid.test(email)) {
       return true;
     }
 
     return false;
-  }
+  };
 
   validateUserName(username) {
-    const name_string = `^(?=.{5,20}$)(?:[a-zA-Z\d]+(?:(?:\.|-|_)[a-zA-Z\d])*)+$`;
-    if (name_string.test(username)) {
+
+    let position = username.search(/ /i);;
+    if (position === -1) {
       return true;
     }
 
     return false;
   }
+  //Moze i sa username trimovanjem
+
+  /*
+  const checkUsername = () => {
+
+  let valid = false;
+  const username = usernameEl.value.trim();
+
+  if (!isRequired(username)) {
+      showError(usernameEl, 'Username cannot be blank.');
+  } else {
+      showSuccess(usernameEl);
+      valid = true;
+  }
+  return valid;
+  }*/
+
 }

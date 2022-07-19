@@ -105,7 +105,9 @@ class User {
         let session = new Session();
         session.destroySession();
 
-        window.location.href = "/"
+        window.location.href = "index.html"
       });
   }
+
+
 }

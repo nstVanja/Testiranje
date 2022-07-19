@@ -14,6 +14,9 @@ if (session_id !== "") {
 
     document.querySelector("#korisnicko_ime").value = user['username'];
     document.querySelector("#edit_email").value = user['email'];
+    document.querySelector('#edit_lozinka').value = user['password'];
+    document.querySelector('#edit_ponovi_lozinku').value = user['password'];
+
   }
 
   populateUserData();
@@ -27,7 +30,7 @@ document.querySelector('#logout').addEventListener('click', e => {
 
   session.destroySession();
   window.location.href = "index.html";
-})
+});
 
 document.querySelector('#editAccount').addEventListener('click', () => {
   document.querySelector('.custom-modal').style.display = 'block';
@@ -37,15 +40,55 @@ document.querySelector('#closeModal').addEventListener('click', () => {
   document.querySelector('.custom-modal').style.display = 'none';
 });
 
+/*   *********** */
+let config = {
+  'korisnicko_ime': {
+    required: true,
+    username: true,
+    minlength: 5,
+    maxlength: 50
+  },
+
+  'edit_email': {
+    required: true,
+    email: true,
+    minlength: 5,
+    maxlength: 50
+  },
+
+  'edit_lozinka': {
+    required: true,
+    minlength: 7,
+    maxlength: 25,
+    matching: 'ponovi_lozinku'
+  },
+
+  'edit_ponovi_lozinku': {
+    required: true,
+    minlength: 7,
+    maxlength: 25,
+    matching: 'edit_lozinka'
+  }
+};
+
+let validator = new Validator(config, '#editForm');
+
 document.querySelector('#editForm').addEventListener('submit', e => {
   e.preventDefault();
 
-  let user = new User();
+  if (validator.validationPassed()) {
 
-  user.username = document.querySelector('#korisnicko_ime').value;
-  user.email = document.querySelector('#edit_email').value;
-  user.edit();
+    let user = new User();
+    user.username = document.querySelector('#korisnicko_ime').value;
+    user.email = document.querySelector('#edit_email').value;
+    user.password = document.querySelector('#edit_lozinka').value;
+    user.edit();
+
+  } else {
+    alert('Polja nisu dobro popunjena');
+  }
 });
+/*   *********** */
 
 document.querySelector('#btnDelete').addEventListener('click', e => {
   e.preventDefault();
@@ -80,14 +123,14 @@ document.querySelector('#postForm').addEventListener('submit', e => {
       let delete_post_html = '';
 
       if (session_id === post.user_id) {
-        delete_post_html = '<button onclick="removeMyPost(this)" class="remove-btn">x</button>';
+        delete_post_html = '<button onclick="removeMyPost(this)" title="Brisanje posta" class="remove-btn">x</button>';
       }
 
       document.querySelector('#allPostsWrapper').innerHTML = `<div class="single-post" data-post_id="${post.id}">
-                                                                    <div class="post-content">${post.content}</div>
+                                                                    <div class="post-content"><span class="autor">My post: </span>${post.content}</div>
 
                                                                     <div class="post-action">
-                                                                        <span class="autor"><b>Autor: </b>${current_user.username}</span>
+
                                                                         <div>
                                                                             <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
                                                                             <button onclick="commentPost(this)" class="comment-btn">Comments</button>
@@ -98,7 +141,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
                                                                     <div class="post-comments">
                                                                         <form>
                                                                             <input placeholder="Napiši komentar..." type="text">
-                                                                            <button onclick="commentPostSubmit(event)">Comment</button>
+                                                                            <button onclick="commentPostSubmit(event)">OK</button>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -122,17 +165,20 @@ async function getAllPosts() {
       let comments = new Comment();
       comments = await comments.get(post.id);
 
-      console.log('broj komentara');
       comments_length = comments.length;
-      console.log(comments_length);
 
       let comments_html = '';
       if (comments.length > 0) {
         comments.forEach(comment => {
           if (session_id === comment.user_id) {
-            comments_html += `<div class="single-comment" data-comment_id="${comment.id}"><span><button onclick="removeMyComment(this)" class="comment-remove">x</button></span> ${comment.content}</div>`;
+            comments_html += `<div class="single-comment">
+                                  <span class="left-comment">${comment.content}</span>
+                                  <span class="right-comment" data-comment_id="${comment.id}"><button onclick="removeMyComment(this)" title="Brisanje komentara" class="comment-remove">x</button></span>
+                              </div>`;
           } else {
-            comments_html += `<div class="single-comment"><span id="comment-name">${comment.user_name}:</span> ${comment.content}</div>`;
+            comments_html += `<div class="single-comment">
+                                  <p class="comment-user"><span class="comment-user-name">${comment.user_name}: </span>${comment.content}</p>
+                              </div>`;
           }
         });
       }
@@ -141,15 +187,18 @@ async function getAllPosts() {
 
       let delete_post_html = '';
 
+      let korisnik = '';
       if (session_id === post.user_id) {
-        delete_post_html = '<button onclick="removeMyPost(this)" class="remove-btn">x</button>';
+        delete_post_html = '<button onclick="removeMyPost(this)" title="Brisanje posta" class="remove-btn">x</button>';
+        korisnik = 'My post: ';
+      } else {
+        korisnik = `${user.username}'s post: `;
       }
 
       document.querySelector('#allPostsWrapper').innerHTML = `<div class="single-post" data-post_id="${post.id}">
-                                                                  <div class="post-content">${post.content}</div>
+                                                                  <div class="post-content"><span class="autor">${korisnik} </span>${post.content}</div>
 
                                                                   <div class="post-action">
-                                                                      <span class="autor"><b>Autor: </b>${user.username}</span>
                                                                       <div>
                                                                           <button onclick="likePost(this)" class="likePostJS like-btn"><span>${post.likes}</span> Likes</button>
                                                                           <button onclick="commentPost(this)" class="comment-btn"><span>${comments_length}</span> Comments</button>
@@ -160,7 +209,7 @@ async function getAllPosts() {
                                                                   <div class="post-comments">
                                                                       <form>
                                                                           <input placeholder="Napiši komentar..." type="text">
-                                                                          <button onclick="commentPostSubmit(event)">Comment</button>
+                                                                          <button onclick="commentPostSubmit(event)">OK</button>
                                                                       </form>
                                                                       ${comments_html}
                                                                   </div>
@@ -204,7 +253,10 @@ const commentPostSubmit = e => {
       comment.user_name = comment_name;
       comment.create();
 
-      main_post_el.querySelector('.post-comments').innerHTML += `<div class="single-comment" data-comment_id="${comment.id}"><span><button onclick="removeMyComment(this)" class="comment-remove">x</button></span> ${comment.content}</div>`;
+      main_post_el.querySelector('.post-comments').innerHTML += `<div class="single-comment">
+                            <span class="left-comment">${comment.content}</span>
+                            <span class="right-comment" data-comment_id="${comment.id}"><button onclick="removeMyComment(this)" title="Brisanje komentara" class="comment-remove">x</button></span>
+                        </div>`
     } else {
       alert('Komentar je prazan');
     }
@@ -251,7 +303,8 @@ const commentPost = btn => {
 
 const removeMyComment = btn => {
 
-  let comment_id = btn.closest('.single-comment').getAttribute('data-comment_id');
+  let comment_id = btn.closest('.right-comment').getAttribute('data-comment_id');
+
   btn.closest('.single-comment').remove();
 
   let comment = new Comment();
