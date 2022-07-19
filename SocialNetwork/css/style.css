@@ -5,7 +5,6 @@
 }
 
 body {
-  webkit-font-smoothing: antialiased;
   font-family: 'Roboto', sans-serif;
   padding: 2rem 0.3rem;
   width: 100%;
@@ -87,6 +86,7 @@ form div button:hover {
 /* skidanje bulleta kod ul elemenata */
 form ul {
   list-style: none;
+  padding: 0;
 }
 
 form ul li {
@@ -235,12 +235,8 @@ button#btnDelete {
 }
 
 span.autor {
+  font-weight: 500;
   color: #1C6872;
-}
-
-span#comment-name {
-  color: #1C6872;
-  font-weight: 600;
 }
 
 #allPostsWrapper .single-post .post-action {
@@ -306,8 +302,27 @@ span#comment-name {
 #allPostsWrapper .single-post .post-comments .single-comment {
   border: 1px dotted #1C6872;
   padding: 10px;
-  margin-top: 10px;
+  margin: 10px 0 0 0;
   font-size: 0.8rem;
+}
+
+.single-comment {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.left-comment {
+  padding: 0;
+  color: #103A40;
+  width: 97%;
+}
+
+.right-comment {
+  padding: 0 10px 0 10px;
+  margin-right: 0.5rem;
+  text-align: end;
+  color: #8B0000;
+  width: 3%;
 }
 
 button.comment-remove {
@@ -323,7 +338,11 @@ button.comment-remove:hover {
   background-color: #8B0000;
 }
 
-.comment-user {
+.comment-user-name {
+  font-weight: 500;
   color: #1C6872;
-  font-weight: 600;
+}
+
+.comment-user {
+  margin-bottom: 0;
 }
